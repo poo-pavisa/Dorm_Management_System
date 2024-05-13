@@ -8,7 +8,13 @@ use Laravel\Nova\Fields\Gravatar;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Password;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Image;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Laravel\Nova\Fields\Select;
+use Laravel\Nova\Fields\HasOne;
+use Laravel\Nova\Fields\HasMany;
+use Carbon\Carbon;
+use App\Nova\Metrics\UsersPerRole;
 
 class User extends Resource
 {
@@ -26,13 +32,18 @@ class User extends Resource
      */
     public static $title = 'name';
 
+    public function subtitle()
+    {
+        return $this->role;
+    }
+
     /**
      * The columns that should be searched.
      *
      * @var array
      */
     public static $search = [
-        'id', 'name', 'email',
+         'name', 'email', 'role',
     ];
 
     /**
@@ -46,22 +57,58 @@ class User extends Resource
         return [
             ID::make()->sortable(),
 
-            Gravatar::make()->maxWidth(50),
-
             Text::make('Name')
                 ->sortable()
                 ->rules('required', 'max:255'),
 
             Text::make('Email')
                 ->sortable()
-                ->rules('required', 'email', 'max:254')
+                ->rules('required', 'email', 'max:255')
                 ->creationRules('unique:users,email')
                 ->updateRules('unique:users,email,{{resourceId}}'),
+
+            Text::make('Phone')
+                ->rules('required','numeric'),
 
             Password::make('Password')
                 ->onlyOnForms()
                 ->creationRules('required', Rules\Password::defaults())
                 ->updateRules('nullable', Rules\Password::defaults()),
+
+            Select::make('Role')
+                ->required()
+                ->sortable()
+                ->options([
+                'User' => 'User',
+                'Tenant' => 'Tenant',
+                ])
+                ,
+
+            Image::make('Profile', 'profile_photo_path')
+            ->store(function (Request $request, $model) {
+                $file = $request->file('profile_photo_path');
+                $profileName = $model->name;
+                $currentDate = Carbon::now()->format('Ymd_His');
+                $extension = $file->getClientOriginalExtension();
+                $filename = 'user_' . $profileName . '_' . $currentDate . '.' . $extension; 
+                $path = $file->storeAs(
+                    'images/profile/user',
+                    $filename,
+                    'public'
+                );
+                return [
+                    'profile_photo_path' => $path,
+                ];
+            })
+            ->disk('public')
+            ->showOnPreview()
+            ->textAlign('center')
+            ->indexWidth(50)
+            ->detailWidth(150),
+            
+            HasMany::make('Bookings'),
+            HasOne::make('Tenant'),
+            
         ];
     }
 
@@ -73,7 +120,9 @@ class User extends Resource
      */
     public function cards(NovaRequest $request)
     {
-        return [];
+        return [
+            new UsersPerRole(),
+        ];
     }
 
     /**

@@ -16,11 +16,13 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
+            $table->char('phone' ,'10');
+            $table->enum('role',['User' , 'Tenant'])->default('User');
             $table->string('password');
-            # User = 0 , Admin = 1
-            $table->boolean('role')->default(0);
             $table->rememberToken();
+            $table->string('profile_photo_path', 2048)->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

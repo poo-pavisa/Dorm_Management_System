@@ -6,12 +6,26 @@
     "license": "MIT",
     "require": {
         "php": "^8.1",
+        "barryvdh/laravel-dompdf": "^2.1",
+        "coroowicaksono/chart-js-integration": "^0.4.3",
+        "dnwjn/nova-button": "^4.0",
+        "farzai/promptpay": "^1.0",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^10.10",
+        "laravel/jetstream": "^4.3",
+        "laravel/nova": "^4.0",
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
-        "laravel/ui": "^4.4",
-        "laravel/nova": "^4.0"
+        "lexicon/nova-action-button-selectors": "^1.2",
+        "livewire/livewire": "^3.0",
+        "llaski/nova-scheduled-jobs": "^6.1",
+        "outl1ne/nova-sortable": "^3.4",
+        "padocia/laravel-nova-pdf": "^1.0",
+        "pdmfc/nova-action-button": "^0.7.4",
+        "pdmfc/nova-info-card": "^1.0",
+        "phattarachai/thaidate": "^12.1",
+        "sietse85/nova-button": "^1.0",
+        "timothyasp/nova-badge-field": "^2.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
@@ -65,6 +79,7 @@
     },
     "minimum-stability": "stable",
     "prefer-stable": true,
+    
     "repositories": {
         "nova": {
             "type": "composer",

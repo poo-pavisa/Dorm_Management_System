@@ -1,0 +1,12 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.slick-prev {
+    position: absolute;
+    top: 80px;
+    left: 20px;
+    z-index: 10;
+}
